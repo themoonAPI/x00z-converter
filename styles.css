@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg: #0a0a0a;
+    --card: #111111;
+    --accent: #00b4ff;
+    --text: #e0e0e0;
+    --text-muted: #888;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: 
+        linear-gradient(rgba(0, 180, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 180, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+.container {
+    max-width: 620px;
+    width: 100%;
+    padding: 2rem;
+    background: var(--card);
+    border-radius: 20px;
+    border: 1px solid #222;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 0.5rem;
+}
+
+.accent {
+    color: var(--accent);
+}
+
+p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+
+#input {
+    flex: 1;
+    padding: 18px 24px;
+    font-size: 1.1rem;
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 12px;
+    color: white;
+    outline: none;
+    transition: all 0.2s;
+}
+
+#input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(0, 180, 255, 0.1);
+}
+
+#convertBtn {
+    padding: 18px 40px;
+    background: var(--accent);
+    color: black;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+#convertBtn:hover {
+    background: #00cfff;
+    transform: translateY(-2px);
+}
+
+#convertBtn:active {
+    transform: scale(0.98);
+}
+
+.status {
+    min-height: 1.5rem;
+    text-align: center;
+    margin: 1rem 0;
+    font-weight: 500;
+}
+
+.info {
+    background: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #222;
+    font-size: 0.95rem;
+}
+
+.warning {
+    color: #ffaa00;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
