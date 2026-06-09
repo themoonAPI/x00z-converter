@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>x00z Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>x00z <span class="accent">CONVERTER</span></h1>
+            <p>Require Script → RBXM • Instant • No Cooldown</p>
+        </header>
+
+        <div class="input-group">
+            <input type="text" id="input" placeholder="require(123456789) or just 123456789" autocomplete="off">
+            <button id="convertBtn">CONVERT & DOWNLOAD</button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div class="info">
+            <h3>How it works</h3>
+            <ul>
+                <li>Paste a full require() call or raw Asset ID</li>
+                <li>Click Convert → Fetches via Roblox Asset Delivery</li>
+                <li>Downloads as <code>[ID].rbxm</code></li>
+            </ul>
+            <p class="warning">For models only. Drag downloaded .rbxm into Roblox Studio.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
