@@ -4,33 +4,169 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>x00z Converter</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --accent: #00b4ff;
+            --text: #e0e0e0;
+        }
+        
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(rgba(0,180,255,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0,180,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .container {
+            max-width: 620px;
+            width: 100%;
+            padding: 2rem;
+            background: var(--card);
+            border-radius: 20px;
+            border: 1px solid #222;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        }
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .accent { color: var(--accent); }
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin: 2rem 0;
+        }
+        #input {
+            flex: 1;
+            padding: 18px 24px;
+            font-size: 1.1rem;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            color: white;
+            outline: none;
+        }
+        #input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0,180,255,0.1);
+        }
+        #convertBtn {
+            padding: 18px 40px;
+            background: var(--accent);
+            color: black;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        #convertBtn:hover { background: #00cfff; transform: translateY(-2px); }
+        #status {
+            min-height: 1.8rem;
+            text-align: center;
+            font-weight: 500;
+            margin: 1rem 0;
+        }
+        .info {
+            background: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #222;
+            font-size: 0.95rem;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>x00z <span class="accent">CONVERTER</span></h1>
-            <p>Require Script → RBXM • Instant • No Cooldown</p>
-        </header>
-
+        <h1>x00z <span class="accent">CONVERTER</span></h1>
+        <p style="text-align:center; color:#888; margin-bottom:2rem;">Require Script → RBXM • Instant • No Cooldown</p>
+        
         <div class="input-group">
-            <input type="text" id="input" placeholder="require(123456789) or just 123456789" autocomplete="off">
+            <input type="text" id="input" placeholder="require(123456789) or just the Asset ID" autocomplete="off">
             <button id="convertBtn">CONVERT & DOWNLOAD</button>
         </div>
-
-        <div id="status" class="status"></div>
-
+        
+        <div id="status"></div>
+        
         <div class="info">
-            <h3>How it works</h3>
-            <ul>
-                <li>Paste a full require() call or raw Asset ID</li>
-                <li>Click Convert → Fetches via Roblox Asset Delivery</li>
-                <li>Downloads as <code>[ID].rbxm</code></li>
-            </ul>
-            <p class="warning">For models only. Drag downloaded .rbxm into Roblox Studio.</p>
+            <strong>How it works:</strong><br>
+            Paste require() or Asset ID → Downloads as <code>[ID].rbxm</code><br>
+            <span style="color:#ffaa00;">Public models only. Works best in Chrome.</span>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const input = document.getElementById('input');
+        const btn = document.getElementById('convertBtn');
+        const status = document.getElementById('status');
+
+        function extractId(str) {
+            str = str.trim();
+            const match = str.match(/\d+/);
+            return match ? match[0] : null;
+        }
+
+        async function convert() {
+            const id = extractId(input.value);
+            if (!id) {
+                status.innerHTML = '❌ Invalid Asset ID';
+                status.style.color = '#ff5555';
+                return;
+            }
+
+            status.innerHTML = '🔄 Fetching from Roblox...';
+            status.style.color = '#00b4ff';
+
+            try {
+                // Using a public CORS proxy (temporary solution for single-file)
+                const proxy = 'https://corsproxy.io/?';
+                const assetUrl = `https://assetdelivery.roblox.com/v1/asset/?id=${id}`;
+                
+                const res = await fetch(proxy + encodeURIComponent(assetUrl), {
+                    headers: {
+                        'User-Agent': 'Roblox/WinInet'
+                    }
+                });
+
+                if (!res.ok) throw new Error('Fetch failed');
+
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${id}.rbxm`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                status.innerHTML = `✅ Downloaded ${id}.rbxm`;
+                status.style.color = '#00ff9f';
+            } catch (e) {
+                console.error(e);
+                status.innerHTML = '❌ Failed (asset may be private or restricted)';
+                status.style.color = '#ff5555';
+            }
+        }
+
+        btn.addEventListener('click', convert);
+        input.addEventListener('keypress', e => {
+            if (e.key === 'Enter') convert();
+        });
+    </script>
 </body>
 </html>
